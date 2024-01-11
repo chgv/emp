@@ -1,0 +1,1 @@
+export JAVA_OPTS="-Ddbpassword=${EMP_DB_PWD} -Ddbusername=${EMP_DB_USR}"

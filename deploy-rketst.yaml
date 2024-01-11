@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: emp-rkestg
+  namespace: rkestg
+  labels:
+    workload.user.cattle.io/workloadselector: apps.statefulset-rkestg-emp
+spec:
+  serviceName: emp
+  replicas: 3
+  selector:
+    matchLabels:
+      workload.user.cattle.io/workloadselector: apps.statefulset-rkestg-emp
+  template:
+    metadata:
+      labels:
+        workload.user.cattle.io/workloadselector: apps.statefulset-rkestg-emp
+    spec:
+      containers:
+        - name: emp
+          image: harbor.vghtpe.gov.tw/rkestg/emp:latest
+          ports:
+            - name: http
+              containerPort: 8080
+            - name: https  
+              containerPort: 8443           
+          env:
+            - name: TZ
+              value: CST-8
+          envFrom:
+            - secretRef:
+                name: datasource
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: vol
+              mountPath: /APData
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: false
+      volumes:
+        - name: vol
+          nfs:
+            path: /home/nfsshare
+            server: 10.100.130.203
+  volumeClaimTemplates: []
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: emp
+  namespace: rkestg
+spec:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+    - name: https
+      port: 8443
+      targetPort: 8443      
+  selector:
+    workload.user.cattle.io/workloadselector: apps.statefulset-rkestg-emp
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: emp
+  namespace: rkestg
+spec:
+  rules:
+    - host: rkestg.vghtpe.gov.tw
+      http:
+        paths:
+          - path: /emp
+            pathType: Prefix
+            backend:
+              service:
+                name: emp
+                port:
+                  number: 8443

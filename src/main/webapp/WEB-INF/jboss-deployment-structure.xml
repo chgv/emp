@@ -1,0 +1,8 @@
+<jboss-deployment-structure>
+    <deployment>
+        <dependencies>
+            <module name="com.mysql"/>
+            <module name="lib.mylib"/>
+        </dependencies>
+    </deployment>
+</jboss-deployment-structure>
