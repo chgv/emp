@@ -21,9 +21,7 @@ spec:
           image: harbor.vghtpe.gov.tw/rkestg/emp:latest
           ports:
             - name: http
-              containerPort: 8080
-            - name: https  
-              containerPort: 8443           
+              containerPort: 8080        
           env:
             - name: TZ
               value: CST-8
@@ -55,10 +53,7 @@ spec:
   ports:
     - name: http
       port: 8080
-      targetPort: 8080
-    - name: https
-      port: 8443
-      targetPort: 8443      
+      targetPort: 8080    
   selector:
     workload.user.cattle.io/workloadselector: apps.statefulset-rkestg-emp-rkestg
   type: ClusterIP
@@ -79,7 +74,7 @@ spec:
               service:
                 name: emp
                 port:
-                  number: 8443
+                  number: 8080
   tls:
     - hosts:
         - rkestg.vghtpe.gov.tw
