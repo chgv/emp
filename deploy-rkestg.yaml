@@ -80,3 +80,7 @@ spec:
                 name: emp
                 port:
                   number: 8443
+  tls:
+    - hosts:
+        - rkestg.vghtpe.gov.tw
+      secretName: rkestg
