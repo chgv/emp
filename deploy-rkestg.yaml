@@ -32,7 +32,7 @@ spec:
                 name: datasource
           imagePullPolicy: Always
           volumeMounts:
-            - name: vol
+            - name: vol-emp
               mountPath: /APData
           securityContext:
             allowPrivilegeEscalation: false
@@ -40,7 +40,7 @@ spec:
             readOnlyRootFilesystem: false
             runAsNonRoot: false
       volumes:
-        - name: vol
+        - name: vol-emp
           nfs:
             path: /home/nfs-test/VGHXXX
             server: 10.100.130.203
