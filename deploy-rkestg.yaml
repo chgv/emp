@@ -31,7 +31,7 @@ spec:
           imagePullPolicy: Always
           volumeMounts:
             - name: vol-emp
-              mountPath: /APData/VGHXXX
+              mountPath: /APData
           securityContext:
             allowPrivilegeEscalation: false
             privileged: false
