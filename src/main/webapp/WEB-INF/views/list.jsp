@@ -124,7 +124,7 @@
 			});
 		});
 		// header標題
-		$("#pagename").text("員工管理");
+		$("#pagename").text("TEST");
 
 		function sendRequest(object) {
 
