@@ -8,10 +8,10 @@
 		<relativePath />
 	</parent>
 	<groupId>com.bryce</groupId>
-	<artifactId>springboot_CRUD</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
-	<name>springboot_CRUD</name>
+	<artifactId>emp</artifactId>
+	<version>v13</version>
+	<packaging>jar</packaging>
+	<name>emp</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>8</java.version>
@@ -24,6 +24,16 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-actuator</artifactId>
+    		<exclusions>
+				<exclusion>
+					<artifactId>logback-classic</artifactId>
+					<groupId>ch.qos.logback</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 			<exclusions>
@@ -31,12 +41,6 @@
 					<artifactId>logback-classic</artifactId>
 					<groupId>ch.qos.logback</groupId>
 				</exclusion>
-<!--
-				<exclusion>
-					<groupId>org.apache.tomcat.embed</groupId>
-					<artifactId>tomcat-embed-websocket</artifactId>
-				</exclusion>
--->
 			</exclusions>
 		</dependency>
 		<!--jackson-->
@@ -54,15 +58,31 @@
     		<groupId>org.springframework.boot</groupId>
     		<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
+
+		<!-- 使用JSP引擎，SpringBoot内置Tomcat没有此依赖 -->
 		<dependency>
     		<groupId>org.apache.tomcat.embed</groupId>
     		<artifactId>tomcat-embed-jasper</artifactId>
+    		<scope>provided</scope>
 		</dependency>
+
+		<!-- 添加Servlet依赖模块 -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+			
 		<dependency>
     		<groupId>javax.servlet</groupId>
     		<artifactId>jstl</artifactId>
 		</dependency>
-
+		<!--添加Tomcat依赖模块.-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
 		<!--slff4j-->
 		<dependency>
@@ -86,14 +106,12 @@
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
 			<version>2.2</version>
-			<scope>provided</scope>
 		</dependency>
 		<!--jstl-->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
-			<scope>provided</scope>
 		</dependency>
 		<!--熱部署-->
 		<dependency>
@@ -122,14 +140,32 @@
 
 	<build>
 		<plugins>
+			<!-- 一定要注意mvn的插件一定是1.4.2.RELEASE,否则jsp访问不到 -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<finalName>emp</finalName>
-					<start-class>com.bryce.SpringbootCrudApplication</start-class>
-				</configuration>
+				<version>1.4.2.RELEASE</version>
 			</plugin>
 		</plugins>
+
+		<resources>
+			<!-- 打包时将jsp文件拷贝到META-INF目录下-->
+			<resource>
+				<!-- 指定resources插件处理哪个目录下的资源文件 -->
+				<directory>src/main/webapp</directory>
+				<!-- 注意必须要放在此目录下才能被访问到 -->
+				<targetPath>META-INF/resources</targetPath>
+				<includes>
+					<include>**/**</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/**</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
 	</build>
 </project>

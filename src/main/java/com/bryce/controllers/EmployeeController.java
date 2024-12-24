@@ -13,6 +13,7 @@ import com.bryce.model.Employee;
 import com.bryce.repositories.EmployeeRepository;
 import com.bryce.services.IEmployeeService;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 
@@ -24,7 +25,20 @@ public class EmployeeController {
     private IEmployeeService commonService;
     @Autowired
     private EmployeeRepository empRepository;
-
+    
+    @GetMapping("/oom")
+    public String triggerOOM(Model model) {
+        List<byte[]> memoryFill = new ArrayList<>();
+        try {
+            while (true) {
+                memoryFill.add(new byte[1024 * 1024]); // 分配 1MB 內存
+            }
+        } catch (OutOfMemoryError e) {
+            model.addAttribute("errorMessage", "OutOfMemoryError triggered: " + e.getMessage());
+        }
+        return "oom";
+    }
+    
     @GetMapping("/count")
     public String count(HttpSession session, Model model) {
         Integer count = (Integer) session.getAttribute("count");
@@ -34,14 +48,14 @@ public class EmployeeController {
         count++;
         session.setAttribute("count", count);
         model.addAttribute("count", count);
-        return "count";  // 返回视图名称
+        return "count";
     }
 
     @GetMapping("/list")
     public String getAll(Model model) {
         List<Employee> entityList = empRepository.findAll();
         model.addAttribute("entityList", entityList);
-        return "list";  // 返回视图名称
+        return "list";
     }
 
     @PostMapping("/insert")
